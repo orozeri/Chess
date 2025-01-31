@@ -1,0 +1,31 @@
+package com.chess.engine.board;
+
+import com.chess.engine.pieces.Pawn;
+import com.chess.engine.pieces.Piece;
+
+public class EnPassant extends PawnCaptureMove 
+{
+
+	public EnPassant(Board board, Pawn movedPawn, int destCoordinate, Pawn capturedPawn)
+	{ super(board, movedPawn, destCoordinate, capturedPawn); }
+
+	@Override
+	public Board execute()
+	{
+		final Board.Builder builder = new Board.Builder();
+		for (Piece piece : board.getCurrentPlayer().getActivePieces())
+		{
+			if (!movedPiece.equals(piece))
+				builder.setPiece(piece);
+		}
+		for (Piece piece : board.getCurrentPlayer().getOpponent().getActivePieces())
+		{
+			if (!capturedPiece.equals(piece) )
+			builder.setPiece(piece);
+		}
+		Pawn pawn = (Pawn) movedPiece.movePiece(this);
+		builder.setPiece(pawn);
+		builder.setMoveMaker(board.getCurrentPlayer().getOpponent().getAlliance());
+		return builder.build();
+	}
+}
